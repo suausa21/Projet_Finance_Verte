@@ -2,11 +2,9 @@ import pandas as pd
 import numpy as np
 
 class indice_score:
-    def __init__(self, donnees: pd.DataFrame):
-        # Nettoyage des noms de colonnes
-        donnees.columns = donnees.columns.str.strip()
+    def __init__(self, donnees:pd.DataFrame):
         self.df = donnees
-        self.actifs = donnees.iloc[:,[2,3]] #Pour avoir actif + pays
+        self.actifs = donnees[["Company Name", "HQ"]] #Pour avoir actif + pays
         return
     
     def run(self):
@@ -100,6 +98,7 @@ class indice_score:
         return df_score, actifs_pays
     
 
+
 class indice_user:
     def __init__(self, df_home : pd.DataFrame, poids:list):
         #Liste des poids saisie par l'utilisateur
@@ -153,7 +152,7 @@ class indice_user:
                         and col[0] in ['Impact Climatique', 'Impact Indirect', 'Risques non climatiques']]
         colonnes_globales = [col for col in df_score.columns if col[0] in ['ESG Général', 'Innovation']]
         colonnes_utiles = sous_groupes + colonnes_globales
-
+        print(len(colonnes_utiles))
         if len(self.poids) != len(colonnes_utiles):
             raise ValueError(f"Nombre de poids ({len(self.poids)}) ≠ nombre de critères ({len(colonnes_utiles)}).")
 
