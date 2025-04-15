@@ -2,7 +2,7 @@ import streamlit as st
 import base64
 from Utilities.Indice_final import indice_score
 import pandas as pd
-
+from Pages import Outil de simulation de portefeuille 
 st.set_page_config(page_title="Revolution Tech Fund Website", layout="wide",initial_sidebar_state="collapsed")
 
 
