@@ -1,1 +1,7 @@
-
+streamlit
+yfinance
+matplotlib
+scipy.stats
+statsmodels.api
+pandas
+numpy
