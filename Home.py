@@ -1,8 +1,10 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import base64
+from Utilities.Indice_final import indice_score
 
 st.set_page_config(page_title="Revolution Tech Fund Website", layout="wide",initial_sidebar_state="collapsed")
+
 
 #----------------------ARRIERE PLAN---------------------------------------------------------------------
 
@@ -138,6 +140,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+import streamlit as st
+import pandas as pd
+from io import StringIO
 
 # CSS pour les colonnes et le texte
 
@@ -216,7 +221,6 @@ st.markdown("""
         <div class="cell" data-col="5" data-row="2"></div>
     </div>
 """, unsafe_allow_html=True)
-
 
 #----------------------------------------------------------------SECTIONS-----------------------------------
 
@@ -568,7 +572,7 @@ st.markdown("""
 
 
 
-#---SECTION 3 : NOS ACTIFS ?? (mettre le code et un read csv)
+#---SECTION 3 : NOS ACTIFS 
 
 st.markdown("""
     <style>
@@ -603,11 +607,61 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-#Rajouter le tableau à mettre après avoir lancer la fonction indice_fonds
+# Définir les colonnes
+colonnes = [
+    "Rank", "Company Name", "HQ", "Industry Group", "Mkt. Cap (M)", "ESG Score",
+    "Environmental Pillar Score", "Resource Use Score", "Policy Water Efficiency Score",
+    "Policy Energy Efficiency Score", "Policy Sustainable Packaging Score",
+    "Total Renewable Energy To Energy Use in million Score", "Green Buildings Score",
+    "Environmental Supply Chain Management Score", "Environmental Supply Chain Monitoring Score",
+    "Emissions Score", "Climate Change Commercial Risks Opportunities Score",
+    "e-Waste Reduction Score", "Environmental Innovation Score", "Product Impact Minimization Score"
+]
 
+# Titre en blanc
+st.markdown(
+    "<h2 style='color: white; background-color: black; padding: 10px;'>🧾 Complétez ou collez ici vos données ESG</h2>",
+    unsafe_allow_html=True
+)
 
+# Demander à l'utilisateur combien de lignes il souhaite
+st.markdown(
+    """
+    <style>
+    .stNumberInput label {
+        color: white !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
+nb_lignes = st.number_input("Combien de lignes voulez-vous compléter ?", min_value=1, max_value=1000, value=5, step=1)
 
+# Créer un DataFrame vide avec ce nombre de lignes
+df_vide = pd.DataFrame([[""] * len(colonnes) for _ in range(nb_lignes)], columns=colonnes)
+
+# Afficher le tableau éditable
+df_edit = st.data_editor(df_vide, num_rows="fixed", use_container_width=True)
+df_edit = pd.DataFrame(df_edit)
+# Une fois rempli, traiter les données
+if st.button("✅ Valider les données et calculer"):
+    if df_edit.dropna(how="all").empty:
+        st.warning("Aucune donnée remplie.")
+    else:
+        try:
+            df_edit = df_edit.dropna(how="all") 
+            df_edit = df_edit.reset_index()
+            df_edit.iloc[:, 5:] = df_edit.iloc[:, 4:].apply(pd.to_numeric, errors='coerce')
+            indice = indice_score(df_edit)
+            score, pays = indice.run()
+
+            st.markdown('<h3 style="color:white; background-color: black; padding: 10px;">✅ Score Calculé</h3>', unsafe_allow_html=True)
+            st.dataframe(score)
+
+            st.markdown('<h3 style="color:white; background-color: black; padding: 10px;">🌍 Actifs et Pays</h3>', unsafe_allow_html=True)
+            st.dataframe(pays)
+
+        except Exception as e:
+            st.error(f"❌ Erreur lors du calcul : {e}")
 
 #Section 4 : Prêt à essayer ? (simulation de portefeuille)
 
@@ -662,4 +716,3 @@ st.markdown(
     """, 
     unsafe_allow_html=True
 )
-
