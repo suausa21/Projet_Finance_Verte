@@ -2,6 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import base64
 from Utilities.Indice_final import indice_score
+import pandas as pd
 
 st.set_page_config(page_title="Revolution Tech Fund Website", layout="wide",initial_sidebar_state="collapsed")
 
@@ -140,9 +141,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-import streamlit as st
-import pandas as pd
-from io import StringIO
 
 # CSS pour les colonnes et le texte
 
@@ -169,7 +167,7 @@ st.markdown("""
             background-color: transparent;
         }
         .wide-hover-text {
-            grid-column: 2 / 5; 
+            grid-column: 1 / 5; 
             grid-row: 2 / 3;
             position: relative;
         }
@@ -179,14 +177,14 @@ st.markdown("""
             bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
-            width: 55%;
+            width: 30%;
             text-align: center;
             color: white;
             font-weight: bold;
             font-size: 20px;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(50, 168, 82, 0.6);
             padding: 10px;
             border-radius: 8px;
         }
@@ -224,6 +222,44 @@ st.markdown("""
 
 #----------------------------------------------------------------SECTIONS-----------------------------------
 
+# CSS pour styliser les boutons et les sections
+st.markdown("""
+    <style>
+    .scroll-buttons {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: transparent;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        z-index: 1000;
+    }
+    .scroll-buttons button {
+        margin: 5px;
+        padding: 5px 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .scroll-buttons button:hover {
+        background-color: #45a049;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Boutons HTML fixés en bas à droite
+st.markdown("""
+<div class="scroll-buttons">
+    <a href="#section_1"><button>Nos Engagements</button></a>
+    <a href="#section_2"><button>Nos Critères</button></a>
+    <a href="#section_3"><button>Nos Actifs</button></a>
+    <a href="#section_4"><button>Votre Portefeuille</button></a>
+</div>
+""", unsafe_allow_html=True)
 # --- Style CSS global ---
 st.markdown(f"""
     <style>
@@ -324,7 +360,7 @@ st.markdown("""
     }
     </style>
 
-    <div class="modern-columns">
+    <div id="section_1" class="modern-columns">
         <div class="column-1">
             <h3>Nos engagements</h3>
             <p>Dans un monde en pleine transition environnementale et numérique, notre fonds se positionne à l’intersection de ces deux dynamiques, en investissant exclusivement dans des entreprises du secteur des logiciels et services informatiques, tout en intégrant une démarche durable exigeante. <br>
@@ -500,7 +536,7 @@ st.markdown("""
 }
 </style>
 
-<div class="black-section">
+<div id="section_2" class="black-section">
     <div class="title">Nos critères</div>
     <div class="circles">
         <!-- 1 -->
@@ -601,7 +637,7 @@ st.markdown("""
     margin-top: 20px;    
     }
     </style>
-    <div class="black-section-3">
+    <div id="section_3" class="black-section-3">
         <div class="titre">Nos Actifs</div>
     </div>
 """, unsafe_allow_html=True)
@@ -654,6 +690,9 @@ if st.button("✅ Valider les données et calculer"):
             indice = indice_score(df_edit)
             score, pays = indice.run()
 
+            st.session_state['score_df'] = score
+            st.session_state['pays_df'] = pays
+
             st.markdown('<h3 style="color:white; background-color: black; padding: 10px;">✅ Score Calculé</h3>', unsafe_allow_html=True)
             st.dataframe(score)
 
@@ -671,7 +710,7 @@ st.markdown(
     .modern-section {
         background: #224C57;
         backdrop-filter: blur(7px);
-        padding: 60px 30px;
+        padding: 180px 100px;
         border-radius: 0px;
         color: #fff;
         text-align: center;
@@ -692,9 +731,9 @@ st.markdown(
         background-color: #2D5E6A;
     }
     .modern-button {
-        background-color:#50c878;
+        background-color:#3fa367;
         color: white;
-        padding: 15px 40px;
+        padding: 15px 20px;
         border: none;
         border-radius: 50px;
         font-size: 1rem;
@@ -708,10 +747,10 @@ st.markdown(
         transform: translateY(-5px);
     }
     </style>
-    <div class="modern-section">
+    <div id="section_4" class="modern-section">
         <h2>Prêt à essayer ?</h2>
         <p>Testez notre simulation de portefeuille et découvrez comment optimiser votre stratégie d'investissement en quelques clics.</p>
-        <a href="/page_1" class="modern-button">Simuler maintenant</a>
+        <div class="modern-button">Outil de Simulation accessible via le menu</div>
     </div>
     """, 
     unsafe_allow_html=True
