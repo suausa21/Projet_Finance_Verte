@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import base64
 from Utilities.Indice_final import indice_score
 import pandas as pd
