@@ -3,7 +3,7 @@ import base64
 from Utilities.Indice_final import indice_score
 import pandas as pd
 
-st.set_page_config(page_title="Revolution Tech Fund Website", layout="wide")
+st.set_page_config(page_title="Revolution Tech Fund Website", layout="wide",initial_sidebar_state="collapsed")
 
 
 #----------------------ARRIERE PLAN---------------------------------------------------------------------
